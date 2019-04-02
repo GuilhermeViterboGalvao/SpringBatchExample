@@ -55,9 +55,10 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Step step1(ItemWriter<ContactDocument> mongoItemWriter) {
+    public Step step1(ItemReader<ContactTable> mysqlItemReader, ItemWriter<ContactDocument> mongoItemWriter) {
         return stepBuilderFactory.get("step1")
                 .<ContactTable, ContactDocument> chunk(10)
+                .reader(mysqlItemReader)
                 .processor(processor())
                 .writer(mongoItemWriter)
                 .build();

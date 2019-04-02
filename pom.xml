@@ -25,6 +25,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <javax.inject.version>1</javax.inject.version>
 
+        <mysql.version>8.0.15</mysql.version>
+
         <!-- Lombok -->
         <lombok>1.16.10</lombok>
 
@@ -68,6 +70,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
             <!-- Util -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
