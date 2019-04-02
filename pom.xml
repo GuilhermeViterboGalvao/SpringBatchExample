@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>br.com.example</groupId>
+    <artifactId>springbatch</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>springbatch</name>
+
+    <modules>
+        <module>springbatch-app</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.5.RELEASE</version>
+    </parent>
+
+    <properties>
+        <encoding>UTF-8</encoding>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <javax.inject.version>1</javax.inject.version>
+
+        <!-- Lombok -->
+        <lombok>1.16.10</lombok>
+
+        <!-- Groovy -->
+        <groovy-all.version>2.4.12</groovy-all.version>
+
+        <!-- QueryDSL -->
+        <querydsl>4.1.4</querydsl>
+
+        <!-- Tests -->
+        <junit>4.12</junit>
+        <hamcrest.version>1.3</hamcrest.version>
+        <powermock-module-testng-agent.version>1.6.2</powermock-module-testng-agent.version>
+        <powermock-module-testng-common.version>1.6.2</powermock-module-testng-common.version>
+        <powermock.version>1.7.0RC2</powermock.version>
+        <mockito.core.version>1.10.19</mockito.core.version>
+        <rest-assured.version>2.4.0</rest-assured.version>
+        <fixture-factory.version>3.1.0</fixture-factory.version>
+        <de.flapdoodle.embed.mongo.version>2.0.3</de.flapdoodle.embed.mongo.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${encoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Util -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.six2six</groupId>
+                <artifactId>fixture-factory</artifactId>
+                <version>${fixture-factory.version}</version>
+            </dependency>
+
+            <!-- Groovy -->
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>${groovy-all.version}</version>
+            </dependency>
+
+            <!-- QueryDSL -->
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-core</artifactId>
+                <version>${querydsl}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-apt</artifactId>
+                <version>${querydsl}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-mongodb</artifactId>
+                <version>${querydsl}</version>
+            </dependency>
+
+            <!-- Tests -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                <version>${de.flapdoodle.embed.mongo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>${hamcrest.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-testng-common</artifactId>
+                <version>${powermock-module-testng-common.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-testng-agent</artifactId>
+                <version>${powermock-module-testng-agent.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.core.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>hamcrest-core</artifactId>
+                        <groupId>org.hamcrest</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.jayway.restassured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>${rest-assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>

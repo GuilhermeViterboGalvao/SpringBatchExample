@@ -1,0 +1,9 @@
+\.idea/
+**.class
+**.log
+**.iml
+target/
+logs/
+dumps/
+pids/
+**user-mongo/
