@@ -1,0 +1,77 @@
+version: '3.1'
+
+services:
+
+  contacts-mongo:
+    image: mongo:latest
+    ports:
+    - "27017:27017"
+    restart: always
+    container_name: contacts-mongo
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=root
+    - MONGO_INITDB_ROOT_PASSWORD=r00t
+    volumes:
+    - ./docker/contacts-mongo/db:/data/db
+
+  contacts-mysql:
+    container_name: contacts-mysql
+    image: mysql:5.5
+    ports:
+    - "3306:3306"
+    volumes:
+    - ./docker/contacts-mysql/seed_ok.sql:/seed_ok.sql
+    environment:
+    - MYSQL_HOST=localhost
+    - MYSQL_USER=admin
+    - MYSQL_PASSWORD=admin123
+    - MYSQL_ROOT_PASSWORD=r00t
+    - MYSQL_DATABASE=contacts
+    restart: always
+
+  contacts-mongo-setup:
+    image: mongo:latest
+    depends_on:
+    - contacts-mongo
+    links:
+    - contacts-mongo:contacts-mongo
+    command: >
+      bash -c "
+        mongo --username root --password r00t --host contacts-mongo --port 27017 --eval \"db.getSiblingDB('contacts').runCommand( { createUser: 'admin', pwd: 'admin123', roles: [ 'readWrite' ] });\"
+      "
+
+  contacts-mysql-setup:
+    image: mysql:5.5
+    depends_on:
+    - contacts-mysql
+    links:
+    - contacts-mysql:contacts-mysql
+    command: >
+      bash -c "
+        mysql --user=\"admin\" --password=\"admin123\" --database=\"contacts\" --host=\"contacts-mysql\" --execute=\"drop table if exists contact;\";
+        mysql --user=\"admin\" --password=\"admin123\" --database=\"contacts\" --host=\"contacts-mysql\" --execute=\"create table contact (id bigint AUTO_INCREMENT PRIMARY KEY, name varchar(100) not null, lastName varchar(100) not null, email varchar(100) not null, password varchar(100) not null, createdAt datetime not null, lastModified datetime not null);\";
+        mysql --user=\"admin\" --password=\"admin123\" --database=\"contacts\" --host=\"contacts-mysql\" --execute=\"insert into contact (name, lastName, email, password, createdAt, lastModified) values ('Teste 1', 'Last Name', 'teste1@gmail.com', 'teste1', '2019-04-01', '2019-04-01');\";
+        mysql --user=\"admin\" --password=\"admin123\" --database=\"contacts\" --host=\"contacts-mysql\" --execute=\"insert into contact (name, lastName, email, password, createdAt, lastModified) values ('Teste 2', 'Last Name', 'teste2@gmail.com', 'teste2', '2019-04-02', '2019-04-02');\";
+        mysql --user=\"admin\" --password=\"admin123\" --database=\"contacts\" --host=\"contacts-mysql\" --execute=\"insert into contact (name, lastName, email, password, createdAt, lastModified) values ('Teste 3', 'Last Name', 'teste3@gmail.com', 'teste3', '2019-04-03', '2019-04-03');\";
+        mysql --user=\"admin\" --password=\"admin123\" --database=\"contacts\" --host=\"contacts-mysql\" --execute=\"insert into contact (name, lastName, email, password, createdAt, lastModified) values ('Teste 4', 'Last Name', 'teste4@gmail.com', 'teste4', '2019-04-04', '2019-04-04');\";
+        mysql --user=\"admin\" --password=\"admin123\" --database=\"contacts\" --host=\"contacts-mysql\" --execute=\"insert into contact (name, lastName, email, password, createdAt, lastModified) values ('Teste 5', 'Last Name', 'teste5@gmail.com', 'teste5', '2019-04-05', '2019-04-05');\"
+      "
+
+  app:
+    build: .
+    restart: always
+    container_name: app
+    depends_on:
+    - contacts-mongo
+    - contacts-mysql
+    links:
+    - contacts-mongo:contacts-mongo
+    - contacts-mysql:contacts-mysql
+    volumes:
+    - ./:/app
+    - ~/.m2:/root/.m2
+    command: >
+      bash -c "
+        mvn clean install;
+        java -jar -Dspring.profiles.active=docker springbatch-app/target/springbatch-app-*-exec.jar
+      "

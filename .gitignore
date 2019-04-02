@@ -6,4 +6,4 @@ target/
 logs/
 dumps/
 pids/
-**user-mongo/
+**docker/

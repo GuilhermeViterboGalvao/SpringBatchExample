@@ -1,0 +1,14 @@
+spring:
+  batch:
+    initialize-schema: ALWAYS
+  data:
+    mongodb:
+      uri: mongodb://admin:admin123@contacts-mongo:27017/contacts
+  jpa:
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:mysql://contacts-mysql:3306/contacts
+    username: admin
+    password: admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
